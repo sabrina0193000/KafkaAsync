@@ -1,0 +1,60 @@
+
+@新增一個 topic + name:text(自己取名子)
+root@kafka:/# kafka-topics --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 1 --topic test
+
+@看一下有沒有新增成功(看見自己所有的topic)(__有底線是kafka自己建的)
+root@kafka:/#kafka-topics --list --zookeeper zookeeper:2181
+
+@看一下topic裡面的資訊
+root@kafka:/# kafka-topics --describe --zookeeper zookeeper:2181 --topic test3
+
+@建立一個 test3 為範例 
+• kafka-topics \
+--create \
+--zookeeper zookeeper:2181 \
+--replication-factor 1 --partitions 1 \
+--topic test3
+@用docker建立producer 
+kafka-console-producer \
+--broker-list localhost:9092 \
+--topic test3
+@用pycharm作為 consumer
+RUN Python Code kafka_consumer.py
+
+
+@範例2 建立2個docker ,都進入環境
+@docker 1
+docker exec -it kafka bash
+kafka-console-producer \
+--broker-list localhost:9092 \
+--topic test3
+@docker 2
+docker exec -it kafka bash
+kafka-console-consumer \
+--bootstrap-server localhost:9092 \
+--topic test3
+@因為之前沒有關pycharm 所以有兩個人會收到訂閱
+(pycharm 與 @docker 2)
+
+
+@查看資料夾
+root@kafka:/# ls /var/lib/kafka/data
+
+@查看
+root@kafka:/# kafka-topics --describe --zookeeper zookeeper:2181 --topi
+c __consumer_offsets
+
+@查看test3
+root@kafka:/# kafka-topics --describe --zookeeper zookeeper:2181 --topic test3
+
+
+@compact P.70
+kafka-topics --zookeeper zookeeper:2181 --create \
+--topic product-inventory \
+--partitons 1 --replication-fator 1\
+--config cleanup.policy=compact \
+--config segment.ms=1000
+
+@
+
+
